@@ -1,11 +1,16 @@
-import { workspace } from 'vscode'
 import { IJiraConfig } from './models/jiraConfig.interface';
 import { IExtensionConfig } from './models/extensionConfig.interface';
 const JiraApi = require('jira-client');
-let config = workspace.getConfiguration('jira')
 
-let jira = instantiateJira(config);
+const jiraFactory = {
+    instantiateJira,
+    hasValidJiraConfig
+}
+
 function instantiateJira(config: IExtensionConfig) {
+    if(!config.baseUrl) {
+        throw new Error('Configuration missing - please check vscode settings');
+    }
     const urlParts = config.baseUrl.split('://');
     const protocol = urlParts[0];
     const host = urlParts[1];
@@ -20,26 +25,27 @@ function instantiateJira(config: IExtensionConfig) {
         apiVersion: '2',
         strictSSL: false
     }
-    return new JiraApi(jiraConfig)
-}
-
-jira.searchWithQueryFromConfig = () => {
-    const jqlExpression = config.get('jqlExpression');
-    return jira.searchJira(jqlExpression);
-}
-
-jira.setConfig = (newconfig: IExtensionConfig) => {
-    config = newconfig;
-    if(jira && jira.hasValidConfig) {
-        jira = instantiateJira(newconfig);
+    let jira;
+    try {
+        jira = new JiraApi(jiraConfig)
+    } catch(e) {
+        console.log(e);
     }
+    
+    jira.loaded = true;
+
+    jira.searchWithQueryFromConfig = async () => {
+        const jqlExpression = config.get('jqlExpression');
+        return await jira.searchJira(jqlExpression);
+    }
+    return jira;
 }
 
-jira.hasValidConfig = (newconfig: IJiraConfig) =>{
+function hasValidJiraConfig(newconfig: IJiraConfig){
     let valid = true;
     if(!newconfig) return valid = false;
     if(!newconfig.username || !newconfig.password || !newconfig.host || !newconfig.protocol) valid = false;
     return valid;
 }
 
-export default jira;
+export default jiraFactory;

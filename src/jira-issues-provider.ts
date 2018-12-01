@@ -2,7 +2,17 @@ import * as path from 'path';
 import { copy } from 'copy-paste';
 import { EventEmitter, TreeDataProvider, TreeItem, ExtensionContext, 
 	window, workspace, commands, Uri } from 'vscode';
-import jira from './jiraApi';
+import jiraFactory from './jiraFactory';
+let jiraClient;
+
+try {
+	const config = workspace.getConfiguration('jira');
+	jiraClient = jiraFactory.instantiateJira(config);
+} catch(error) {
+	jiraClient = {
+		loadError: error.message
+	}
+}
 
 class JiraIssue extends TreeItem {
 	constructor(label: string, public item: any) {
@@ -41,8 +51,11 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 
 	private async getJiraIssues(): Promise<TreeItem[]>{
 		var that = this;
+		if(jiraClient.loadError) {
+			return [new TreeItem(jiraClient.loadError)];
+		}
 		try {
-			return jira.searchWithQueryFromConfig()
+			return await jiraClient.searchWithQueryFromConfig()
 				.then(async function(data: any){
 					var children: JiraIssue[] = [];
 					var promises = data.issues.map( async(issue: any) => {
@@ -63,11 +76,14 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 					});
 					await Promise.all(promises);
 					if(!children.length) {
-						return [new TreeItem('No issues found')];
+						return [new TreeItem('No issues found - try updating jqlExpression')];
 					}
 					return children;
 				})
 		} catch(e){
+			if(e.message.includes('Unauthorized (401)')) {
+				return [new TreeItem('Username or password is incorrect')];
+			}
 			return [new TreeItem(`Error retrieving issues: ${JSON.stringify(e)}`)]
 		}
 	}
@@ -75,7 +91,13 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 	private async refresh(config ?: any) {
 		if (!this.fetching) {
 			if(config) {
-				jira.setConfig(config);
+				try {
+					jiraClient = jiraFactory.instantiateJira(config);
+				} catch(error) {
+					jiraClient = {
+						loadError: error.message
+					}
+				}
 			}
 			this.children = await this.getChildren();
 			this._onDidChangeTreeData.fire();
