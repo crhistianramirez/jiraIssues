@@ -11,6 +11,7 @@ You'll need to define the following settings before you start seeing any issues:
 - `jira.baseUrl`
 - `jira.username`
 - `jira.password`
+- `jira.port (default: 443)`
 
 ## Custom filtering
 By default you will see issues assigned to you that have not yet been resolved but you can provide your own JQL [(Jira Query Language)](https://confluence.atlassian.com/jirasoftwarecloud/advanced-searching-764478330.html) expression to filter issues exactly the way you want.

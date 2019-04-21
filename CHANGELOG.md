@@ -13,3 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - load extension even if configuration is missing with helpful message
 ### Changed
 - added more robust error messages throughout
+
+## [1.0.4] 2019-04-21
+### Added
+- port number added to configuration
