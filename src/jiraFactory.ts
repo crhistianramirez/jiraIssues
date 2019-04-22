@@ -20,6 +20,7 @@ function instantiateJira(config: IExtensionConfig) {
     const jiraConfig: IJiraConfig = {
         protocol,
         host,
+        port: config.port,
         username: config.username,
         password: config.password,
         apiVersion: '2',

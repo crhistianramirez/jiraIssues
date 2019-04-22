@@ -95,7 +95,15 @@
             "null"
           ],
           "default": "",
-          "description": "Your JIRA base URL e.g. https://your_jira_base_url.com or http://your_jira_base_url.com:your_port"
+          "description": "Your JIRA base URL e.g. https://your_jira_base_url.com or http://your_jira_base_url.com"
+        },
+        "jira.port": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "443",
+          "description": "Port number of baseUrl, default is 443"
         },
         "jira.username": {
           "type": [
