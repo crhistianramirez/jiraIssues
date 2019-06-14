@@ -72,8 +72,8 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 						}
 						jiraIssue.command = {
 							title: 'Open',
-							command: 'jiraIssues.copyText',
-							arguments: [issue]
+							command: 'jiraIssues.openIssue',
+							arguments: [jiraIssue]
 						}
 						jiraIssue.contextValue = 'issue';
 						children.push(jiraIssue);
