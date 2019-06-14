@@ -61,6 +61,11 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 					var promises = data.issues.map( async(issue: any) => {
 						var description = `${issue.key}: (${issue.fields.status.name}) ${issue.fields.summary}`
 						const jiraIssue = new JiraIssue(description, issue);
+						if (issue.fields.status.name == "Done") {
+							var icon = `task_complete.svg`;
+						} else {
+							var icon = `${issue.fields.issuetype.name.toLowerCase()}.svg`;
+						};
 						jiraIssue.iconPath = {
 							light: that.context.asAbsolutePath(path.join('assets', 'icons', 'light', icon)),
 							dark: that.context.asAbsolutePath(path.join('assets', 'icons', 'dark', icon))
