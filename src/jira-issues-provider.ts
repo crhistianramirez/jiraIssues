@@ -59,9 +59,8 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 				.then(async function(data: any){
 					var children: JiraIssue[] = [];
 					var promises = data.issues.map( async(issue: any) => {
-						const jiraIssue = new JiraIssue(`${issue.key}: ${issue.fields.summary}`, issue);
-						const issueType = issue.fields.issuetype.name;
-						var icon = `${issueType.toLowerCase()}.svg`;
+						var description = `${issue.key}: (${issue.fields.status.name}) ${issue.fields.summary}`
+						const jiraIssue = new JiraIssue(description, issue);
 						jiraIssue.iconPath = {
 							light: that.context.asAbsolutePath(path.join('assets', 'icons', 'light', icon)),
 							dark: that.context.asAbsolutePath(path.join('assets', 'icons', 'dark', icon))
