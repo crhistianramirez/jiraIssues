@@ -91,11 +91,24 @@
       "properties": {
         "jira.baseUrl": {
           "type": [
-            "string",
-            "null"
+            "string"
           ],
           "default": "",
           "description": "Your JIRA base URL e.g. https://your_jira_base_url.com or http://your_jira_base_url.com"
+        },
+        "jira.username": {
+          "type": [
+            "string"
+          ],
+          "default": "",
+          "description": "The username for logging in to Jira"
+        },
+        "jira.apiToken": {
+          "type": [
+            "string"
+          ],
+          "default": "",
+          "description": "The user's api token for logging in to Jira (generated from user's account). More info on generating your own token here: https://confluence.atlassian.com/cloud/api-tokens-938839638.html"
         },
         "jira.port": {
           "type": [
@@ -103,23 +116,14 @@
             "null"
           ],
           "default": "443",
-          "description": "Port number of baseUrl, default is 443"
-        },
-        "jira.username": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": "",
-          "description": "The username for logging in to Jira"
+          "description": "Port number of baseUrl, default is 443 (optional)"
         },
         "jira.password": {
           "type": [
-            "string",
-            "null"
+            "string"
           ],
           "default": "",
-          "description": "The password for logging in to Jira"
+          "description": "[DEPRECATED] Jira deprecated basic auth via password, this field will still 'work' but expects an apiToken"
         },
         "jira.jqlExpression": {
           "type": [

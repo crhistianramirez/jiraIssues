@@ -4,6 +4,7 @@ export interface IExtensionConfig extends WorkspaceConfiguration {
     baseUrl?: string;
     port?: string;
     username?: string;
-    password?: string;
+    apiToken?: string;
     jqlExpression?: string;
+    password?: string; // deprecated
 }

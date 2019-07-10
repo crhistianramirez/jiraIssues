@@ -10,8 +10,9 @@ You'll need to define the following settings before you start seeing any issues:
 
 - `jira.baseUrl`
 - `jira.username`
-- `jira.password`
+- `jira.apiToken` - [generate an api token](https://confluence.atlassian.com/cloud/api-tokens-938839638.html)
 - `jira.port (default: 443)`
+- `jira.password` - [DEPRECATED] Jira [no longer allows basic auth with password](https://confluence.atlassian.com/cloud/deprecation-of-basic-authentication-with-passwords-for-jira-and-confluence-apis-972355348.html). Field still "works" but expects an apiToken regardless.
 
 ## Custom filtering
 By default you will see issues assigned to you that have not yet been resolved but you can provide your own JQL [(Jira Query Language)](https://confluence.atlassian.com/jirasoftwarecloud/advanced-searching-764478330.html) expression to filter issues exactly the way you want.

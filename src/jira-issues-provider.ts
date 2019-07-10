@@ -2,17 +2,11 @@ import * as path from 'path';
 import { copy } from 'copy-paste';
 import { EventEmitter, TreeDataProvider, TreeItem, ExtensionContext, 
 	window, workspace, commands, Uri } from 'vscode';
-import jiraFactory from './jiraFactory';
-let jiraClient;
+import jiraService from './jiraService';
+import { IExtensionConfig } from './models/extensionConfig.interface';
 
-try {
-	const config = workspace.getConfiguration('jira');
-	jiraClient = jiraFactory.instantiateJira(config);
-} catch(error) {
-	jiraClient = {
-		loadError: error.message
-	}
-}
+const config = workspace.getConfiguration('jira');
+jiraService.setConfiguration(config);
 
 class JiraIssue extends TreeItem {
 	constructor(label: string, public item: any) {
@@ -50,16 +44,16 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 	}
 
 	private async getJiraIssues(): Promise<TreeItem[]>{
-		var that = this;
-		if(jiraClient.loadError) {
-			return [new TreeItem(jiraClient.loadError)];
+		const that = this;
+		if(jiraService.isInFaultedState) {
+			return [new TreeItem(jiraService.errorMessage)];
 		}
 		try {
-			return await jiraClient.searchWithQueryFromConfig()
+			return await jiraService.searchWithQueryFromConfig()
 				.then(async function(data: any){
-					var children: JiraIssue[] = [];
-					var promises = data.issues.map( async(issue: any) => {
-						var description = `${issue.key}: (${issue.fields.status.name}) ${issue.fields.summary}`
+					let children: JiraIssue[] = [];
+					let requests = data.issues.map( async(issue: any) => {
+						const description = `${issue.key}: (${issue.fields.status.name}) ${issue.fields.summary}`
 						const jiraIssue = new JiraIssue(description, issue);
 						if (issue.fields.resolution == null) {
 							var icon = `${issue.fields.issuetype.name.toLowerCase()}.svg`;
@@ -78,7 +72,7 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 						jiraIssue.contextValue = 'issue';
 						children.push(jiraIssue);
 					});
-					await Promise.all(promises);
+					await Promise.all(requests);
 					if(!children.length) {
 						return [new TreeItem('No issues found - try updating jqlExpression')];
 					}
@@ -86,22 +80,16 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 				})
 		} catch(e){
 			if(e.message.includes('Unauthorized (401)')) {
-				return [new TreeItem('Username or password is incorrect')];
+				return [new TreeItem('Username or api token is incorrect')];
 			}
-			return [new TreeItem(`Error retrieving issues: ${JSON.stringify(e)}`)]
+			return [new TreeItem(`Error retrieving issues: ${e.message}`)]
 		}
 	}
 
-	private async refresh(config ?: any) {
+	private async refresh(newConfig ?: IExtensionConfig) {
 		if (!this.fetching) {
-			if(config) {
-				try {
-					jiraClient = jiraFactory.instantiateJira(config);
-				} catch(error) {
-					jiraClient = {
-						loadError: error.message
-					}
-				}
+			if(newConfig) {
+				jiraService.setConfiguration(newConfig);
 			}
 			this.children = await this.getChildren();
 			this._onDidChangeTreeData.fire();
