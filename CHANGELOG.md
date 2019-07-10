@@ -17,3 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] 2019-04-21
 ### Added
 - port number added to configuration
+
+## [1.2.0] 2019-06-14
+### Fixed
+- clicking on Jira Issue now opens issue in a web browser
+### Changed
+- updated issue format to be identifier, status, description "Project-ID: (status) descriptions"
+### Added
+- if issue status is "Done", update icon to task_complete icon with green check box
