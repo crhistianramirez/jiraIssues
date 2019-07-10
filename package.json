@@ -130,7 +130,7 @@
             "string",
             "null"
           ],
-          "default": "assignee = currentUser() AND resolution = EMPTY ORDER BY Rank ASC",
+          "default": "assignee = currentUser() AND resolution = EMPTY",
           "description": "Provide your custom JQL (Jira Query Language) expression to filter issues. Defaults to returning all issues assigned to you that have not yet been resolved. More info on JQL here: https://confluence.atlassian.com/jirasoftwarecloud/advanced-searching-764478330.html"
         }
       }

@@ -19,9 +19,9 @@ By default you will see issues assigned to you that have not yet been resolved b
 
 - `jira.jqlExpression`
 
-For example the following expression will return all unresolved bugs assigned to you for the BAC project in the last 7 days in ascending order:
+For example the following expression will return all unresolved bugs assigned to you for the BAC project in the last 7 days:
 
-`assignee = currentUser() AND PROJECT = BAC AND issuetype = Bug AND resolution is EMPTY ORDER BY Rank ASC`
+`assignee = currentUser() AND PROJECT = BAC AND issuetype = Bug AND resolution is EMPTY`
 
 As you can see building your own JQL query gives you enormous power in building up a list of issues that are important to you. Its recommendable to type and test your JQL expression in Jira which has a wonderful typeahead that makes building a query extremely easy.
 
