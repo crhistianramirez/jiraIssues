@@ -2,7 +2,7 @@
   "name": "jira-issues",
   "displayName": "Jira Issues",
   "description": "Create a custom filter to view Jira issues in the Explorer viewlet",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "Crhistian Ramirez",
   "publisher": "crhistianr",
   "engines": {
