@@ -18,7 +18,8 @@ class JiraService {
             if(!config.apiToken && !config.password) {
                 throw new Error('Missing configuration jira.apiToken. Please update vscode settings.');
             }
-            const [protocol, host] = config.baseUrl.split('://');
+            const baseUrl = config.baseUrl.endsWith('/') ? config.baseUrl.slice(0, -1) : config.baseUrl;
+            const [protocol, host] = baseUrl.split('://');
             if(!host || (protocol !== 'http' && protocol != 'https')) {
                 throw new Error('Please provide a valid base url');
             }

@@ -92,7 +92,7 @@ export class JiraIssuesProvider implements TreeDataProvider<TreeItem> {
 				jiraService.setConfiguration(newConfig);
 			}
 			this.children = await this.getChildren();
-			this._onDidChangeTreeData.fire();
+			this._onDidChangeTreeData.fire(null);
 		}
 	}
 
